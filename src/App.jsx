@@ -1,8 +1,9 @@
+import { useEffect, useState } from 'react'
 import './App.css'
 
 const images = {
   hero: 'https://cdn.pixabay.com/photo/2015/04/15/21/06/cricket-724615_1280.jpg',
-  jersey: 'https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&fm=jpg&q=80&w=1400',
+  jersey: 'https://source.unsplash.com/1400x900/?cricket,jersey,team',
   gearBat: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAetJ8UTa7v95VsADompKR2RiooSDpKV8ncTLZ4uzRW5T5gC0TOlG_sq6tBoiovAQ2s4ddslBgCJ7tGwuy7st31m2cG3mOtFAdbjIv7NNFwZCSPwhvL7p6Y34Ole9_TYWAKCxXI0Z-qSY2_8ea5p4yYDsiY5AU9vnfv60KsxmEE0FoehZWIQkWsXx5ygTXIFlGbJ0Kv-sw-i__3VcdPQ2WBxU4jUrvHrv2sp3-WEdO5CMaLrVlq3czkCmi_GPiSGZylONayYDpz8YBP'
 }
 
@@ -31,9 +32,50 @@ function scrollTo(id) {
 }
 
 export default function App() {
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    const updateScrolled = () => {
+      setIsScrolled(window.scrollY > 48)
+    }
+
+    updateScrolled()
+    window.addEventListener('scroll', updateScrolled, { passive: true })
+    return () => window.removeEventListener('scroll', updateScrolled)
+  }, [])
+
+  useEffect(() => {
+    const targets = document.querySelectorAll(
+      '.hero, .section, .club-banner-main, .contact-section, .service-overview-card, .jersey-card, .gear-bat-tile, .gear-protection-tile, .gear-balls-tile'
+    )
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      targets.forEach((item) => item.classList.add('is-visible'))
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible')
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      {
+        threshold: 0.12,
+        rootMargin: '0px 0px -6% 0px'
+      }
+    )
+
+    targets.forEach((item) => observer.observe(item))
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <main className="aleph-page">
-      <nav className="nav-shell">
+      <nav className={`nav-shell ${isScrolled ? 'is-scrolled' : ''}`}>
         <button className="nav-brand" type="button" onClick={() => scrollTo('#home')}>
           <img src="/assets/logo.jpg" alt="Aleph Sports logo" />
           <span>ALEPH SPORTS</span>
@@ -89,8 +131,7 @@ export default function App() {
         <div className="section-heading">
           <span />
           <div>
-            <p className="kicker dark">CUSTOMISED JERSEYS</p>
-            <h2>Customised Jerseys</h2>
+            <h2>Jerseys</h2>
           </div>
         </div>
         <div className="jersey-layout">
@@ -124,7 +165,15 @@ export default function App() {
           </div>
           <div className="jersey-media">
             <div className="jersey-media-frame" />
-            <img src={images.jersey} alt="High-quality customised jersey fabric with premium stitched detailing" />
+            <img
+              src={images.jersey}
+              alt="Cricket team players wearing jerseys"
+              loading="lazy"
+              onError={(event) => {
+                event.currentTarget.onerror = null
+                event.currentTarget.src = images.hero
+              }}
+            />
           </div>
         </div>
       </section>
