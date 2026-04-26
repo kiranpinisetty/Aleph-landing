@@ -23,6 +23,27 @@ const serviceCards = [
   ['bolt', 'Fast Turnaround', 'Reliable production timelines and responsive support for urgent team orders and upcoming fixtures.']
 ]
 
+const reviews = [
+  {
+    quote: 'Aleph nailed our cricket jerseys from design to delivery. The fit and finish felt like a proper club kit.',
+    name: 'Arjun Reddy',
+    team: 'Krishna Strikers',
+    sport: 'Cricket'
+  },
+  {
+    quote: 'The bat knocking service changed the feel of my match bat. Clear advice, fast work, no drama.',
+    name: 'Madhav Kumar',
+    team: 'Vijayawada Blues',
+    sport: 'Cricket'
+  },
+  {
+    quote: 'We ordered full jersey sets with names and numbers, and every player got the right fit on the first delivery.',
+    name: 'Sai Teja',
+    team: 'Riverfront CC',
+    sport: 'Cricket'
+  }
+]
+
 function Icon({ name }) {
   return <span className="material-symbols-outlined" aria-hidden="true">{name}</span>
 }
@@ -223,8 +244,36 @@ export default function App() {
         </div>
       </section>
 
+      <section className="section social-proof-section" id="proof">
+        <p className="section-side-label">04 PROOF</p>
+        <div className="section-heading compact">
+          <span />
+          <div>
+            <p className="kicker dark">SOCIAL PROOF</p>
+            <h2>Trusted By Local Teams</h2>
+          </div>
+        </div>
+        <div className="review-badge" aria-label="5 star rating">
+          <span className="material-symbols-outlined" aria-hidden="true">star</span>
+          <span className="material-symbols-outlined" aria-hidden="true">star</span>
+          <span className="material-symbols-outlined" aria-hidden="true">star</span>
+          <span className="material-symbols-outlined" aria-hidden="true">star</span>
+          <span className="material-symbols-outlined" aria-hidden="true">star</span>
+          <a href="https://share.google/ek6VBoBLolHW0Xi5j" target="_blank" rel="noreferrer">Read Google Reviews</a>
+        </div>
+        <div className="reviews-grid">
+          {reviews.map((review) => (
+            <article className="review-card" key={`${review.name}-${review.team}`}>
+              <p className="review-quote">"{review.quote}"</p>
+              <p className="review-name">{review.name}</p>
+              <p className="review-meta">{review.team} · {review.sport}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="contact-section" id="contact">
-        <p className="section-side-label contact-side-label">04 CONTACT</p>
+        <p className="section-side-label contact-side-label">05 CONTACT</p>
         <div className="contact-header">
           <p className="kicker">ENQUIRY DESK</p>
           <h2>Connect With Us</h2>
